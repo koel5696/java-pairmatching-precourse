@@ -24,28 +24,27 @@ public class PairController {
 
     public void run() {
         while (true) {
-            int num = oneStep();
-            if (checkExit(num)) {
+            String inputCommand = oneStep();
+            if (checkExit(inputCommand)) {
                 return;
             }
-            if (num == 3) {
+            int commandNumber = Integer.parseInt(inputCommand);
+
+            if (Command.validThreeSelect(commandNumber)) {
                 functionSelectionService.resetService(pairStore);
                 outputView.completeReset();
             } else {
-                outputView.printMatchingResult(twoStep(num));
+                outputView.printMatchingResult(twoStep(commandNumber));
             }
         }
     }
 
-    private int oneStep() {
+    private String oneStep() {
         while (true) {
             try {
                 String select = inputView.selectUtility();
                 functionSelectionService.validSelectService(select);
-                if (select.equals("Q")) {
-                    return 100;
-                }
-                return Integer.parseInt(select);
+                return select;
             } catch (IllegalArgumentException e) {
                 outputView.printErrorMessage(e.getMessage());
             }
@@ -71,10 +70,7 @@ public class PairController {
         }
     }
 
-    private boolean checkExit(int num) {
-        if (num == 3) {
-            return false; // 초기화 기능 추가.
-        }
-        return num == 100;
+    private boolean checkExit(String inputCommand) {
+        return Command.commandCompare(inputCommand);
     }
 }
