@@ -18,6 +18,7 @@ public class InputView {
     }
 
     public String alreadyMatchingError(String message) {
+        System.out.println();
         System.out.println(message);
         System.out.println("네 | 아니오");
         return Console.readLine();
