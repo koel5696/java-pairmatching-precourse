@@ -60,12 +60,22 @@ public class PairController {
             } catch (IllegalArgumentException e) {
                 outputView.printErrorMessage(e.getMessage());
             } catch (AlreadyExistException e) {
-                String reMatchingRequest = inputView.alreadyMatchingError(e.getMessage());
-                MatchingDTO matchingDTO = functionSelectionService.reMatching(pairStore, reMatchingRequest,
-                        e.getMissionKey());
+                MatchingDTO matchingDTO = alreadyMatchingResponse(e);
                 if (matchingDTO != null) {
                     return matchingDTO;
                 }
+            }
+        }
+    }
+
+    private MatchingDTO alreadyMatchingResponse(AlreadyExistException e) {
+        while (true) {
+            try {
+                String reMatchingRequest = inputView.alreadyMatchingError(e.getMessage());
+                return functionSelectionService.reMatching(pairStore, reMatchingRequest,
+                        e.getMissionKey());
+            } catch (IllegalArgumentException ee) {
+                outputView.printErrorMessage(ee.getMessage());
             }
         }
     }
